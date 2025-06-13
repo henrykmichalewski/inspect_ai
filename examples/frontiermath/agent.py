@@ -180,7 +180,7 @@ You will be solving a challenging mathematics question. Here's how it works:
    - When scoring your answer, the maximum runtime for the `answer` function is {answer_func_timeout} seconds. The code is executed on typical commodity hardware for the year 2025.
 
    Example final message:
-   {"tool": "submit_answer", "args": {"answer": "def answer():\n    return 367707"}}
+   {"tool": "submit_answer", "args": {"answer": "def answer():\n    return 123459876"}}
 7. For using the `python` tool:
     * The tool will only return stdout (and stderr), so you must make sure to
      use print() to see your results. If you don't get any output from a `python` tool call, you
