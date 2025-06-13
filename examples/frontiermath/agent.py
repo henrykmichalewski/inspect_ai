@@ -41,7 +41,7 @@ def frontiermath_agent(
         ]
 
         while state.token_usage < token_limit:
-            state = await generate(state, tool_calls="single")
+            state = await generate(state, tools=[submit_answer])
 
             if store().get("submitted_answer") is not None:
                 break
