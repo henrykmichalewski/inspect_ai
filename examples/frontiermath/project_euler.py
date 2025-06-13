@@ -1,8 +1,12 @@
 from inspect_ai import Task, task
 from inspect_ai.dataset import Sample
 
-from .agent import frontiermath_agent
-from .scorer import verification_code_scorer
+try:
+    from .agent import frontiermath_agent
+    from .scorer import verification_code_scorer
+except ImportError:  # Fallback when running without package context
+    from agent import frontiermath_agent
+    from scorer import verification_code_scorer
 
 
 @task
