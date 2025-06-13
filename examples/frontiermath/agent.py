@@ -78,6 +78,13 @@ def frontiermath_agent(
 
 @tool
 def submit_answer() -> Tool:
+    """Record the final answer function code.
+
+    Provide the code for a function named ``answer`` that returns the
+    solution to the current problem. The code will be stored for scoring
+    and no feedback on correctness is given.
+    """
+
     async def execute(answer_fn_code: str) -> ToolResult:
         store().set("submitted_answer", answer_fn_code)
         return "Your answer has been recorded. No feedback is provided."
