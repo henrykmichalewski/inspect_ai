@@ -413,7 +413,10 @@ async def call_tool(
         else:
             async with span(name=call.function, type="tool"):
                 transcript()._event(event)
-                result: ToolResult = await tool_def.tool(**arguments)
+                res = tool_def.tool(**arguments)
+                if inspect.isawaitable(res):
+                    res = await res
+                result = res
                 return result, [], None, None
 
 

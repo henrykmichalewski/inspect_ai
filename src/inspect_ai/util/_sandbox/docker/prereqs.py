@@ -38,12 +38,50 @@ async def validate_docker_engine(version: str = DOCKER_ENGINE_REQUIRED_VERSION) 
         version = DockerVersion(**json.loads(stdout)).Client.Version
         return semver.Version.parse(version)
 
-    await validate_version(
-        cmd=["docker", "version", "--format", "json"],
-        parse_fn=parse_version,
-        required_version=version,
-        feature="Docker Engine",
-    )
+
+async def validate_version(
+    cmd: list[str],
+    parse_fn: Callable[[str], semver.Version],
+    required_version: str,
+    feature: str,
+) -> None:
+    # helper: run docker once, return (ok, stdout, stderr, returncode)
+    async def _run(cmd: list[str]) -> RunResult:
+        result = await subprocess(cmd)
+        return RunResult(
+            result.success, result.stdout, result.stderr, result.returncode
+        )
+
+    # 1️⃣ try the modern flag first
+    ok, out, err, rc = await _run(cmd)
+
+    # 2️⃣ if that fails, retry with the old '{{json .}}' template
+    if not ok and cmd[-1] == "json":
+        legacy_cmd = cmd[:-1] + ["{{json .}}"]
+        ok, out, err, rc = await _run(legacy_cmd)
+
+    if not ok:
+        raise PrerequisiteError(
+            "ERROR: Docker sandbox environments require a working Docker Engine\n\n"
+            + f"{cmd[0]} exited with return code {rc} when executing: {shlex.join(cmd)}\n"
+            + err
+        )
+
+    # parse & compare versions
+    try:
+        version = parse_fn(out)
+    except Exception as ex:  # parsing still failed
+        logger.warning(f"Unexpected error executing docker: {ex}")
+        raise PrerequisiteError(
+            "ERROR: Docker sandbox environments require Docker Engine\n\n"
+            + "Install: https://docs.docker.com/engine/install/"
+        )
+
+    if version.compare(required_version) < 0:
+        raise PrerequisiteError(
+            f"ERROR: Docker sandbox environments require {feature} ≥ {required_version} "
+            f"(current: {version})\n\nUpgrade: https://docs.docker.com/engine/install/"
+        )
 
 
 # We require Compose v2.21.0, however if we are going to use

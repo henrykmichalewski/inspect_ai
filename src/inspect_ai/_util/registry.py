@@ -105,9 +105,14 @@ def registry_tag(
     # bind arguments to params
     named_params = extract_named_params(type, False, *args, **kwargs)
 
-    # set attribute
-    setattr(o, REGISTRY_INFO, info)
-    setattr(o, REGISTRY_PARAMS, named_params)
+    # Tag objects **only** if they can accept attributes.
+    # Immutable built-ins (int, str, float, bool, …) raise AttributeError.
+    try:
+        setattr(o, REGISTRY_INFO, info)
+        setattr(o, REGISTRY_PARAMS, named_params)
+    except (AttributeError, TypeError):
+        # Primitive result – nothing to tag, and that’s fine.
+        return
 
 
 def extract_named_params(

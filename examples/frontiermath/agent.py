@@ -1,10 +1,13 @@
 import logging
 import textwrap
 from pathlib import Path
+from typing import Annotated
+
+from pydantic import Field
 
 from inspect_ai.model import ChatMessageTool, ChatMessageUser
 from inspect_ai.solver import Generate, Solver, TaskState, solver
-from inspect_ai.tool import Tool, ToolFunction, ToolResult, python, tool
+from inspect_ai.tool import ToolFunction, python, tool
 from inspect_ai.util import store
 
 PROJECT_ROOT = Path(__file__).resolve().parent
@@ -26,7 +29,7 @@ def frontiermath_agent(
 
         store().set("submitted_answer", None)
         state.token_limit = token_limit
-        state.tools = [python(timeout=PYTHON_TOOL_TIMEOUT), submit_answer()]
+        state.tools = [python(timeout=PYTHON_TOOL_TIMEOUT), submit_answer]
         state.tool_choice = "auto"
 
         state.messages = [
@@ -77,19 +80,17 @@ def frontiermath_agent(
 
 
 @tool
-def submit_answer() -> Tool:
-    """Record the final answer function code.
-
-    Provide the code for a function named ``answer`` that returns the
-    solution to the current problem. The code will be stored for scoring
-    and no feedback on correctness is given.
+def submit_answer(
+    answer: Annotated[
+        int, Field(description="The numeric answer for the current sample")
+    ],
+) -> int:
     """
+    Record the final answer.
 
-    async def execute(answer_fn_code: str) -> ToolResult:
-        store().set("submitted_answer", answer_fn_code)
-        return "Your answer has been recorded. No feedback is provided."
-
-    return execute
+    Returns the same integer so the tool result can be logged.
+    """
+    return answer
 
 
 def insert_tool_call_help_message(state: TaskState) -> TaskState:
