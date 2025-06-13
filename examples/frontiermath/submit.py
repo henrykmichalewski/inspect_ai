@@ -9,13 +9,13 @@ from inspect_ai.util import store
 @tool
 def submit_answer(
     answer: Annotated[
-        int, Field(description="The numeric answer to the current sample")
+        str, Field(description="The Python function string for the answer")
     ],
-) -> int:
+) -> str:
     """The agent calls this once it is confident.
 
     Args:
-        answer: The numeric answer to the current sample.
+        answer: The Python function string for the answer.
 
     Returns:
         The submitted answer.
