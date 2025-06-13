@@ -14,7 +14,10 @@ from inspect_ai.scorer import (
 from inspect_ai.solver import TaskState
 from inspect_ai.util import sandbox
 
-from .agent import ANSWER_FUNC_TIMEOUT
+try:
+    from .agent import ANSWER_FUNC_TIMEOUT
+except ImportError:  # Fallback when running without package context
+    from agent import ANSWER_FUNC_TIMEOUT
 
 VERIFICATION_CODE_TIMEOUT = 120
 
