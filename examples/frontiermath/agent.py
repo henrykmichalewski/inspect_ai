@@ -62,6 +62,7 @@ def frontiermath_agent(
                     f"You have used {state.token_usage:,} tokens, which is above the forced "
                     f"submission threshold of {forced_submit_tokens:,} tokens. (Hard limit: {token_limit:,} tokens). "
                     f"You must submit your answer now using the `submit_answer` tool. "
+                    "Your final assistant message must contain only the tool call and no other text."
                 )
                 state.messages.append(ChatMessageUser(content=warning_message))
                 continue
@@ -72,7 +73,8 @@ def frontiermath_agent(
                 f"You have used {state.token_usage:,} tokens (forced submission: {forced_submit_tokens:,} tokens, "
                 f"hard limit: {token_limit:,} tokens). "
                 f"Continue exploring the problem, or submit your answer "
-                f"using the `submit_answer` tool when you are confident in your answer."
+                f"using the `submit_answer` tool when you are confident in your answer. "
+                "Your final assistant message must contain only the tool call and no other text."
             )
             state.messages.append(ChatMessageUser(content=message))
 
@@ -145,6 +147,7 @@ You will be solving a challenging mathematics question. Here's how it works:
    - Think out loud and explore the problem
    - Use the `python` tool to execute arbitrary Python code
    - Submit your answer using the `submit_answer` tool when you are confident in your answer.
+   - When you submit, your assistant message must contain only the `submit_answer` tool call with no additional text.
 
 2. Token limits:
     - There is a hard limit of {token_limit:,} tokens. If you exceed this, the conversation will end
