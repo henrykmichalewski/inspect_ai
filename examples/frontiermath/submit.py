@@ -9,16 +9,22 @@ from inspect_ai.util import store
 @tool
 def submit_answer(
     answer: Annotated[
-        str, Field(description="The Python function string for the answer")
+        str,
+        Field(
+            description=(
+                "Source code for a Python function named `answer` that "
+                "returns the solution"
+            )
+        ),
     ],
 ) -> str:
     """The agent calls this once it is confident.
 
     Args:
-        answer: The Python function string for the answer.
+        answer: Source code of an ``answer`` function that returns the solution.
 
     Returns:
-        The submitted answer.
+        The submitted function code.
     """
     store().set("submitted_answer", answer)
     return answer
