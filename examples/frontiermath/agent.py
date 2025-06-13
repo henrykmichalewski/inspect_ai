@@ -172,14 +172,15 @@ You will be solving a challenging mathematics question. Here's how it works:
     - Before submitting, verify your answer satisfies all problem requirements. It may be worth trying
       a different approach if you can see that your current answer is not correct.
 6. For using the `submit_answer` tool:
-   - Pass in the code of a Python function named 'answer' that:
-       - Takes no parameters
-       - Returns your answer as a {answer_type}
-       - Prints no output
-       - Contains no code comments
-    - When scoring your answer, the maximum runtime for the `answer` function is
-      {answer_func_timeout} seconds. The code is executed on typical commodity hardware for the year
-       2025.
+   - Provide the source code of a Python function named `answer`.
+   - The function must take no parameters and return your final answer as a {answer_type}.
+   - It should not print anything or include comments.
+   - Supply this code as plain text in the `answer` argument—do not wrap it in a code block.
+   - The final assistant message must contain only the `submit_answer` tool call with the function.
+   - When scoring your answer, the maximum runtime for the `answer` function is {answer_func_timeout} seconds. The code is executed on typical commodity hardware for the year 2025.
+
+   Example final message:
+   {"tool": "submit_answer", "args": {"answer": "def answer():\n    return 367707"}}
 7. For using the `python` tool:
     * The tool will only return stdout (and stderr), so you must make sure to
      use print() to see your results. If you don't get any output from a `python` tool call, you
