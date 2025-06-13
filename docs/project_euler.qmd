@@ -6,11 +6,11 @@ This example demonstrates using a custom evaluation script to verify solutions t
 mathematics problems. The scorer executes verification code in the Inspect
 sandbox to check the result of a submitted `answer()` function.
 
-The task definition lives in `examples/frontiermath/project_euler.py` and uses
+The task definition lives in `examples/frontiermath/project_euler_like.py` and uses
 the `frontiermath_agent` and `verification_code_scorer`.
 
 ```{bash}
-inspect eval examples/frontiermath/project_euler.py --model <model-name>
+inspect eval examples/frontiermath/project_euler_like.py --model <model-name>
 ```
 
 Each sample provides a short piece of Python code that defines `verify(a)`.
