@@ -1,7 +1,6 @@
 import logging
 import textwrap
 from pathlib import Path
-from typing import Annotated
 
 from pydantic import Field
 
@@ -10,7 +9,12 @@ from inspect_ai.solver import Generate, Solver, TaskState, solver
 from inspect_ai.tool import ToolFunction, python
 from inspect_ai.util import store
 
-from .submit import submit_answer
+try:
+    # When the file is part of a real Python package
+    from .submit import submit_answer
+except ImportError:
+    # When the file is loaded directly by inspect_ai’s loader
+    from submit import submit_answer
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 
@@ -81,8 +85,6 @@ def frontiermath_agent(
         return state
 
     return solve
-
-
 
 
 def insert_tool_call_help_message(state: TaskState) -> TaskState:
