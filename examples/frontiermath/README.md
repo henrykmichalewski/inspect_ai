@@ -34,6 +34,18 @@ inspect eval examples/frontiermath/frontier_math.py \
 
 Here `--epochs 32` repeats each problem 32 times, and `--epochs-reducer` mean,`pass_at_32` generates both the average accuracy and the pass@32 metric for each problem.
 
+To limit the number of retries for a given problem, you can use the `--max-retries` argument. For example, to limit retries to 3:
+
+```bash
+inspect eval examples/frontiermath/frontier_math.py \
+  --model google/gemini-1.5-pro-preview-0514 \
+  --sandbox docker \
+  --log-format=json \
+  --epochs 32 \
+  --epochs-reducer mean,pass_at_32 \
+  --max-retries 3
+```
+
 **Note:** Ensure that the model ID (e.g., `google/gemini-2.5-pro-preview-06-05`) matches how Gemini 2.5 Pro is configured in your `inspect-ai` environment and that you have the necessary access and API keys set up.
 
 The model will receive the problem statement along with instructions on how to use the
